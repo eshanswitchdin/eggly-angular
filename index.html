@@ -6,67 +6,101 @@
         <title></title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" />
     </head>
-    <body ng-controller="BookmarkCtrl">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-3 col-md-2-sidebar">
-                        <h3 ng-click=setCurrentCategory(null)>Categories</h3>
-                        <ul>
-                            <li ng-repeat="category in categories" >
-                                <a href="" ng-click="setCurrentCategory(category)" class="btn btn-default" ng-class="{'active':isCurrentCategory(category)}">{{category.name}}</a>
-                            </li>
-                        </ul>
+    <body >
+    <!-- eggly -->
+        <div >
+            <div ng-controller="BookmarkCtrl">
+                
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-3 col-md-2-sidebar">
+                            <h3 ng-click=setCurrentCategory(null)>Categories</h3>
+                            <ul>
+                                <li ng-repeat="category in categories" >
+                                    <a href="" ng-click="setCurrentCategory(category)" class="btn btn-default" ng-class="{'active':isCurrentCategory(category)}">{{category.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 main">
+                            <h3>Bookmarks</h3>
+                            <h5>Current Category : {{currentCategory.name}}</h5>
+                            <div ng-repeat="bookmark in bookmarks | filter:{category:currentCategory.name}" class="col-xs-12 col-sm-6 col-md-8">
+                                <span class="glyphicon glyphicon-pencil" ng-click="setEditedBookmark(bookmark); startEditing()"></span>
+                                <a href="{{bookmark.url}}">{{bookmark.title}}</a>
+                                <button type="button" class="close" ng-click="deleteBookmark(bookmark)">&times;</button>
+                            </div>
+                        </div>
+                            
                     </div>
-                    <div class="col-sm-6 main">
-                        <h3>Bookmarks</h3>
-                        <h5>Current Category : {{currentCategory.name}}</h5>
-                        <div ng-repeat="bookmark in bookmarks | filter:{category:currentCategory.name}" class="col-xs-12 col-sm-6 col-md-8">
-                            <span class="glyphicon glyphicon-pencil" ng-click="setEditedBookmark(bookmark); startEditing()"></span>
-                            <a href="{{bookmark.url}}">{{bookmark.title}}</a>
-                            <button type="button" class="close" ng-click="deleteBookmark(bookmark)">&times;</button>
+                    <hr />
+                    <!-- Creating-->
+                    <button type="button" class="btn btn-primary" ng-click="startCreating()">Create a Bookmark</button>
+                    <hr />
+                    <div ng-if="shouldShowCreating()">
+                        <form ng-submit="createBookmark(newBookmark)">
+                          <div class="form-group">
+                            <label for="BookmarkTitle">Bookmark Title</label>
+                            <input type="text" class="form-control" placeholder="example bookmark" ng-model="newBookmark.title">
+                          </div>
+                          <div class="form-group">
+                            <label for="BookmarkURL">Bookmark URL</label>
+                            <input type="text" class="form-control" placeholder="http://example.bookmark.com" ng-model="newBookmark.url">
+                          </div>
+                          <button type="submit" class="btn btn-default" ng-class="{'disabled':    shouldEnableSubmit()}">Submit</button>
+                          <button type="button" class="btn btn-default" ng-click="cancelCreating()">Cancel</button>
+                        </form>
                     </div>
+                    <!-- Editing-->
+                    <div ng-if="shouldShowEditing()">
+                        <form ng-submit="updateBookmark(editedBookmark)">
+                          <div class="form-group">
+                            <label for="BookmarkTitle">Bookmark Title</label>
+                            <input type="text" class="form-control" placeholder="example bookmark" ng-model="editedBookmark.title">
+                          </div>
+                          <div class="form-group">
+                            <label for="BookmarkURL">Bookmark URL</label>
+                            <input type="text" class="form-control" placeholder="http://example.bookmark.com" ng-model="editedBookmark.url">
+                          </div>
+                          <button type="submit" class="btn btn-default" ng-class="{'disabled':shouldEnableSubmit()}">Submit</button>
+                          <button type="button" class="btn btn-default" ng-click="cancelEditing()">Cancel</button>
+                        </form>
                     </div>
-                        
-                </div>
-                <hr />
-                <!-- Creating-->
-                <button type="button" class="btn btn-primary" ng-click="startCreating()">Create a Bookmark</button>
-                <hr />
-                <div ng-if="shouldShowCreating()">
-                    <form ng-submit="createBookmark(newBookmark)">
-                      <div class="form-group">
-                        <label for="BookmarkTitle">Bookmark Title</label>
-                        <input type="text" class="form-control" placeholder="example bookmark" ng-model="newBookmark.title">
-                      </div>
-                      <div class="form-group">
-                        <label for="BookmarkURL">Bookmark URL</label>
-                        <input type="text" class="form-control" placeholder="http://example.bookmark.com" ng-model="newBookmark.url">
-                      </div>
-                      <button type="submit" class="btn btn-default">Submit</button>
-                      <button type="button" class="btn btn-default" ng-click="cancelCreating()">Cancel</button>
-                    </form>
-                </div>
-                <!-- Editing-->
-                <div ng-if="shouldShowEditing()">
-                    <form ng-submit="updateBookmark(editedBookmark)">
-                      <div class="form-group">
-                        <label for="BookmarkTitle">Bookmark Title</label>
-                        <input type="text" class="form-control" placeholder="example bookmark" ng-model="editedBookmark.title">
-                      </div>
-                      <div class="form-group">
-                        <label for="BookmarkURL">Bookmark URL</label>
-                        <input type="text" class="form-control" placeholder="http://example.bookmark.com" ng-model="editedBookmark.url">
-                      </div>
-                      <button type="submit" class="btn btn-default">Submit</button>
-                      <button type="button" class="btn btn-default" ng-click="cancelEditing()">Cancel</button>
-                    </form>
-                </div>
 
+                </div>
+            </div>
+        </div>
+            
+        <!-- passman -->
+        <div >
+            <div ng-controller="PassmanCtrl">
+                <div class="container-fluid">
+                     <div class="row">
+                         <div class="col-sm-3 col-md-2-sidebar">
+                             <h3 ng-click=setCurrentCategory(null)>Password Manager</h3>
+                             <ul>
+                                 <li ng-repeat="app in apps" >
+                                     <a href="" ng-click="copyToClipboard(app.password)">{{app.name}}</a>
+                                 </li>
+                             </ul>
+                            <input id="number" type="number" value="25" ng-model="passlen"> 
+                             <button type="button" ng-click="newapp.password=generatePassword(passlen)">Generate Random Password</button>
+
+                             <input type="text" ng-model="newapp.name" />
+                             <button type="button" ng-click="addNewApp(newapp)">Add New App</button>
+                             <h3>{{newapp.password}}</h3>
+                         </div>
+                     </div>
+                </div>
             </div>
 
+        </div>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js"></script>
        <script src="https://code.jquery.com/jquery-1.12.4.min.js" charset="utf-8"></script>
        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.min.js" charset="utf-8"></script>
-       <script src="app.js" charset="utf-8"></script>
+       <script src="eggly.js" charset="utf-8"></script>
+       <script src="passman.js" charset="utf-8"></script>
     </body>
 </html>
